@@ -248,8 +248,10 @@ const ThreadRow = GObject.registerClass({
 
         // Update avatar for single-recipient messages
         if (message.addresses.length === 1) {
-            this._avatar.contact = this.contacts[this._sender];
-            nameLabel = this._avatar.contact.name;
+            if (this._sender != null) {
+              this._avatar.contact = this.contacts[this._sender];
+              nameLabel = this._avatar.contact.name;
+            }
         } else {
             this._avatar.contact = null;
             nameLabel = _('Group Message');
@@ -565,7 +567,7 @@ const ConversationWidget = GObject.registerClass({
             setAvatarVisible(row, true);
 
         // Or if the previous sender was the same, hide its avatar
-        } else if (row.type === before.type &&
+        } else if (row.type === before.type && row.sender != null &&
                    row.sender.equalsPhoneNumber(before.sender)) {
             setAvatarVisible(before, false);
             setAvatarVisible(row, true);
@@ -923,8 +925,9 @@ var Window = GObject.registerClass({
             if (message) {
                 // Ensure there's a contact mapping
                 let sender = message.addresses[0].address;
-
-                if (!row.contacts[sender]) {
+                if (sender == null) {
+                    row.contacts[sender] = {};
+                } else if (!row.contacts[sender]) {
                     row.contacts[sender] = this.device.contacts.query({
                         number: sender
                     });

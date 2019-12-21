@@ -388,10 +388,12 @@ var Plugin = GObject.registerClass({
                 thread_ids.push (message.thread_id);
 
                 // TODO: Remove bogus `insert-address-token` entries
+                // Also remove null or undefined addresses
                 let a = message.addresses.length;
 
                 while (a--) {
-                    if (message.addresses[a].address === 'insert-address-token')
+                    if (message.addresses[a].address == null
+                      || message.addresses[a].address === 'insert-address-token')
                         message.addresses.splice(a, 1);
                 }
             }

@@ -560,9 +560,11 @@ var Store = GObject.registerClass({
         for (let i = 0, len = addresses.length; i < len; i++) {
             let address = addresses[i].address;
 
-            contacts[address] = this.query({
+            if (address != null) {
+              contacts[address] = this.query({
                 number: address
-            });
+              });
+            }
         }
 
         return contacts;
